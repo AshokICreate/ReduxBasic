@@ -7,7 +7,8 @@
 import React, { Component } from 'react';
 import { View, Text } from 'react-native';
 import { Provider } from 'react-redux';
-import { createStore, compose, composeEnhancers } from 'redux';
+import { createStore, compose, composeEnhancers, applyMiddleware } from 'redux';
+import ReduxThunk from 'redux-thunk';
 import firebase from 'firebase';
 import reducers from './reducers';
 import { Header } from './components/common';
@@ -30,9 +31,10 @@ export default class App extends Component<{}> {
   }
 
   render() {
+    const middleware = [ReduxThunk];
     const composeEnhancers = global.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
-    const enhancer = composeEnhancers();
-    const store = createStore(reducers, enhancer);
+    const enhancer = composeEnhancers(applyMiddleware(...middleware));
+    const store = createStore(reducers, {}, enhancer);
     return (
       <Provider store={store}>
         <LoginForm />
